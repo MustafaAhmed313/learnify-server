@@ -15,7 +15,7 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: [true, getErrorMessage(ERROR.REQUIRED, 'Password')],
-    min: [8, getErrorMessage(ERROR.SHORT_PASSWORD, 'Password')]
+    min: [8, getErrorMessage(ERROR.SHORT_PASSWORD, 'Password')],
   }
 });
 

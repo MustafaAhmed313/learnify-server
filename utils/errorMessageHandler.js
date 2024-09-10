@@ -3,7 +3,8 @@ const ERROR = {
   UNIQUE: 'unique',
   SHORT_PASSWORD: 'short_password',
   MISSING_DATA: 'missing',
-  INVALID: 'invalid'
+  INVALID: 'invalid',
+  NOT_FOUND: 'not-found'
 }
 
 const getErrorMessage = (errorType, field) => {
@@ -24,6 +25,9 @@ const getErrorMessage = (errorType, field) => {
       break;
     case ERROR.INVALID : 
       errorMessage = `Invalid ${field}!`;
+      break;
+    case ERROR.NOT_FOUND : 
+      errorMessage = `${field} not found!`;
       break;
   }
 
