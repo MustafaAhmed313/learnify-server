@@ -18,7 +18,7 @@ const signUp = asyncWrapper(async(req, res, next) => {
       STATUS.FAIL,
       getErrorMessage(ERROR.MISSING_DATA)
     );
-    res.status(401).json(error);
+    res.status(400).json(error);
   }
 
   const result = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g.test(email);
@@ -27,16 +27,16 @@ const signUp = asyncWrapper(async(req, res, next) => {
       STATUS.FAIL,
       getErrorMessage(ERROR.INVALID, 'email')
     );
-    res.status(401).json(error);
+    res.status(400).json(error);
   }
   
-  const oldUser = await User.findOne({email: email});
+  const oldUser = await User.findOne({ $or:[{email: email}, {username: username}] });
   if (oldUser) {
     const error = appError.create(
       STATUS.FAIL,
-      getErrorMessage(ERROR.UNIQUE, 'Email')
+      getErrorMessage(ERROR.UNIQUE, 'Email or Username')
     );
-    res.status(401).json(error);
+    res.status(400).json(error);
   }
   
   if (password.length < 8) {
@@ -44,7 +44,7 @@ const signUp = asyncWrapper(async(req, res, next) => {
       STATUS.FAIL,
       getErrorMessage(ERROR.SHORT_PASSWORD, 'Password')
     );
-    res.status(401).json(error);
+    res.status(400).json(error);
   }
 
   const hashedPassword = await bcryptjs.hash(password, 10);
@@ -65,6 +65,16 @@ const signUp = asyncWrapper(async(req, res, next) => {
   });
 });
 
+const signIn = asyncWrapper(async(req, res, next) => {
+  const {
+    username,
+    password,
+  } = req.body;
+
+  //user name doesn't exist
+});
+
 module.exports = {
-  signUp
+  signUp,
+  signIn,
 };
