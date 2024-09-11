@@ -116,7 +116,16 @@ const signIn = asyncWrapper(async(req, res, next) => {
   });
 });
 
+const signOut = asyncWrapper(async(req, res, next) => {
+  res.status(202).json({
+    status: STATUS.SUCCESS,
+    message: 'User signed out successfully!',
+    token: ''
+  });
+});
+
 module.exports = {
   signUp,
   signIn,
+  signOut
 };
