@@ -2,7 +2,8 @@ const express = require('express');
 const {
   signUp,
   signIn,
-  signOut
+  signOut,
+  forgetPassword
 } = require('../controllers/authController');
 
 const router = express.Router();
@@ -12,6 +13,9 @@ router.route('/signup')
 
 router.route('/signin')
   .post(signIn);
+
+router.route('/forgetpass')
+  .post(forgetPassword);
 
 router.route('/signout')
   .get(signOut);
