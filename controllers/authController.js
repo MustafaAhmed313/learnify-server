@@ -4,6 +4,9 @@ const { STATUS, appError } = require('../utils/appError');
 const asyncWrapper = require('../middlewares/asyncWrapper');
 const { getErrorMessage, ERROR } = require('../utils/errorMessageHandler');
 const generateToken = require('../utils/jwtGenerator');
+const sendEmail = require('../utils/email');
+const { generateEmailTemplate, TEMPLATES } = require('../utils/generateEmailTemlate');
+const generateOtp = require('../utils/otpGenerator');
 
 
 const signUp = asyncWrapper(async(req, res, next) => {
@@ -124,8 +127,62 @@ const signOut = asyncWrapper(async(req, res, next) => {
   });
 });
 
+const forgetPassword = asyncWrapper(async(req, res, next) => {
+  const { email } = req.body;
+
+  if (!email) {
+    const error = appError(
+      STATUS.FAIL,
+      getErrorMessage(ERROR.REQUIRED, 'Email')
+    );
+    res.status(400).json(error);
+  }
+
+  const result = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g.test(email);
+  if (!result) {
+    const error = appError.create(
+      STATUS.FAIL,
+      getErrorMessage(ERROR.INVALID, 'email')
+    );
+    res.status(400).json(error);
+  }
+
+  const oldUser = await User.findOne({email: email});
+  if (!oldUser) {
+    const error = appError.create(
+      STATUS.FAIL,
+      getErrorMessage(ERROR.NOT_FOUND, 'User')
+    );
+    res.status(400).json(error);
+  }
+
+  const otp = generateOtp(1000, 9999);
+  const hashedOtp = await bcryptjs.hash(otp.toString(), 10);
+  const message = generateEmailTemplate(TEMPLATES.FORGET_PASSWORD, {
+    firstName: oldUser.username,
+    data: otp 
+  });
+  
+  try {
+    await sendEmail({
+      recipient: email,
+      subject: `🔒 Forget Password Email 🔒`,
+      message: message  
+    });
+  
+    res.status(200).json({
+      status: STATUS.SUCCESS,
+      message: 'Email sent successfully!',
+      otp: hashedOtp
+    });
+  } catch (err) {
+    console.log('mail error:', err);
+  }
+});
+
 module.exports = {
   signUp,
   signIn,
-  signOut
+  signOut,
+  forgetPassword
 };
