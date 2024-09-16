@@ -4,7 +4,9 @@ const ERROR = {
   SHORT_PASSWORD: 'short_password',
   MISSING_DATA: 'missing',
   INVALID: 'invalid',
-  NOT_FOUND: 'not-found'
+  NOT_FOUND: 'not-found',
+  SAME_PASSWORD: 'same-old',
+  NO_MATCH_PASSWORD: 'no-match'
 }
 
 const getErrorMessage = (errorType, field) => {
@@ -28,6 +30,12 @@ const getErrorMessage = (errorType, field) => {
       break;
     case ERROR.NOT_FOUND : 
       errorMessage = `${field} not found!`;
+      break;
+    case ERROR.NO_MATCH_PASSWORD : 
+      errorMessage = `${field} and confirm${field} doesn't match!`;
+      break;
+    case ERROR.SAME_PASSWORD : 
+      errorMessage = `Change the new ${field}!`;
       break;
   }
 

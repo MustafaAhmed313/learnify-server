@@ -225,10 +225,70 @@ const validateOtp = asyncWrapper(async(req, res, next) => {
   }
 });
 
+const resetPassword = asyncWrapper(async(req, res, next) => {
+  const {
+    email,
+    password,
+    confirmPassword
+  } = req.body;
+
+  if (!email || !password || !confirmPassword) {
+    const error = appError.create(
+      STATUS.FAIL,
+      getErrorMessage(ERROR.MISSING_DATA)
+    );
+    res.status(400).json(error);
+  }
+
+  const oldUser = await User.findOne({email: email});
+  if (!oldUser) {
+    const error = appError.create(
+      STATUS.FAIL,
+      getErrorMessage(ERROR.NOT_FOUND, 'User')
+    );
+    res.status(404).json(error);
+  }
+
+  if (password.length < 8 || confirmPassword < 8) {
+    const error = appError.create(
+      STATUS.FAIL,
+      getErrorMessage(ERROR.SHORT_PASSWORD, 'Password')
+    );
+    res.status(400).json(error);
+  }
+
+  if (password !== confirmPassword) {
+    const error = appError.create(
+      STATUS.FAIL,
+      getErrorMessage(ERROR.NO_MATCH_PASSWORD, 'Password')
+    );
+    res.status(400).json(error);
+  }
+
+  const match = await bcryptjs.compare(password, oldUser.password);
+  if (match) {
+    const error = appError.create(
+      STATUS.FAIL,
+      getErrorMessage(ERROR.SAME_PASSWORD, 'password')
+    );
+    res.status(400).json(error);
+  }
+
+  const hashedPassword = await bcryptjs.hash(password, 10);
+  oldUser.password = hashedPassword;
+  oldUser.save();
+
+  res.status(201).json({
+    status: STATUS.SUCCESS,
+    message: 'User password changed successfully. Try to login!'
+  });
+});
+
 module.exports = {
   signUp,
   signIn,
   signOut,
   forgetPassword,
   validateOtp,
+  resetPassword
 };
