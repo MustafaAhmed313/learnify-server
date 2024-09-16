@@ -16,6 +16,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, getErrorMessage(ERROR.REQUIRED, 'Password')],
     min: [8, getErrorMessage(ERROR.SHORT_PASSWORD, 'Password')],
+  },
+  otp: {
+    type: String,
+    default: ''
   }
 });
 
