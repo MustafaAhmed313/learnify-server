@@ -71,11 +71,11 @@ const signUp = asyncWrapper(async(req, res, next) => {
 
 const signIn = asyncWrapper(async(req, res, next) => {
   const {
-    username,
+    email,
     password,
   } = req.body;
 
-  if (!username || !password) {
+  if (!email || !password) {
     const error = appError.create(
       STATUS.FAIL,
       getErrorMessage(ERROR.MISSING_DATA)
@@ -83,7 +83,7 @@ const signIn = asyncWrapper(async(req, res, next) => {
     res.status(400).json(error);
   }
 
-  const oldUser = await User.findOne({username: username});
+  const oldUser = await User.findOne({email: email});
   if (!oldUser) {
     const error = appError.create(
       STATUS.FAIL,
