@@ -14,7 +14,8 @@ const signUp = asyncWrapper(async(req, res, next) => {
   const {
     username,
     email,
-    password
+    password,
+    phone
   } = req.body;
 
   if (!username || !email || !password) {
@@ -34,11 +35,11 @@ const signUp = asyncWrapper(async(req, res, next) => {
     res.status(400).json(error);
   }
   
-  const oldUser = await User.findOne({ $or:[{email: email}, {username: username}] });
+  const oldUser = await User.findOne({email: email});
   if (oldUser) {
     const error = appError.create(
       STATUS.FAIL,
-      getErrorMessage(ERROR.UNIQUE, 'Email or Username')
+      getErrorMessage(ERROR.UNIQUE, 'Email')
     );
     res.status(400).json(error);
   }
@@ -55,7 +56,8 @@ const signUp = asyncWrapper(async(req, res, next) => {
   const user = new User({
     username: username,
     email: email,
-    password: hashedPassword
+    password: hashedPassword,
+    phone: phone
   });
   await user.save();
 
