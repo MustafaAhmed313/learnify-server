@@ -19,6 +19,10 @@ const userSchema = new mongoose.Schema({
   otp: {
     type: String,
     default: ''
+  },
+  phone: {
+    type: String,
+    default: "01234567890"
   }
 });
 
