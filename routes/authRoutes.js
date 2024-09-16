@@ -5,7 +5,8 @@ const {
   signOut,
   forgetPassword,
   validateOtp,
-  resetPassword
+  resetPassword,
+  deleteAccount
 } = require('../controllers/authController');
 
 const router = express.Router();
@@ -24,6 +25,9 @@ router.route('/verify-otp')
 
 router.route('/reset-pass')
   .post(resetPassword);
+
+router.route('/unsubscribe')
+  .delete(deleteAccount);
 
 router.route('/signout')
   .get(signOut);

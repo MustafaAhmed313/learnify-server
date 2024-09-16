@@ -284,11 +284,40 @@ const resetPassword = asyncWrapper(async(req, res, next) => {
   });
 });
 
+const deleteAccount = asyncWrapper(async(req, res, next) => {
+  const { email } = req.body
+
+  if (!email) {
+    const error = appError.create(
+      STATUS.FAIL,
+      getErrorMessage(ERROR.REQUIRED, 'Email')
+    );
+    res.status(400).json(error);
+  }
+
+  const oldUser = await User.findOne({email: email});
+  if (!oldUser) {
+    const error = appError.create(
+      STATUS.FAIL,
+      getErrorMessage(ERROR.NOT_FOUND, 'User')
+    );
+    res.status(404).json(error);
+  }
+
+  await User.findByIdAndDelete(oldUser._id);
+
+  res.status(200).json({
+    status: STATUS.SUCCESS,
+    message: 'User account deleted successfully!'
+  });
+});
+
 module.exports = {
   signUp,
   signIn,
   signOut,
   forgetPassword,
   validateOtp,
-  resetPassword
+  resetPassword,
+  deleteAccount
 };
