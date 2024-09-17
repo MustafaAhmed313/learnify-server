@@ -182,7 +182,10 @@ const forgetPassword = asyncWrapper(async(req, res, next) => {
       otp: hashedOtp
     });
   } catch (err) {
-    console.log('mail error:', err);
+    const error = appError.create(
+      STATUS.FAIL,
+      getErrorMessage()
+    )
   }
 });
 
