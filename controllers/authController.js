@@ -179,7 +179,6 @@ const forgetPassword = asyncWrapper(async(req, res, next) => {
     res.status(200).json({
       status: STATUS.SUCCESS,
       message: 'Email sent successfully!',
-      otp: hashedOtp
     });
   } catch (err) {
     const error = appError.create(
