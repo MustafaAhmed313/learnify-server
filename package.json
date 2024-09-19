@@ -31,9 +31,6 @@
     "nodemon": "^3.1.4",
     "pug": "^3.0.3"
   },
-  "engines": {
-    "node": ">=18.0.0"
-  },
   "devDependencies": {
     "@types/node": "^22.5.5"
   }
