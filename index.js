@@ -9,6 +9,7 @@ dotenv.config({
   path: './.env'
 });
 
+
 const authRouter = require('./routes/authRoutes');
 
 const app = express();
@@ -25,8 +26,6 @@ app.get('/' , (req, res) => {
   res.status(200).send('Testing Connection...');
 }); 
 
-
-
 const port = process.env.PORT;
 let url ='';
 if (process.env.NODE_ENV === 'production') {
@@ -34,7 +33,6 @@ if (process.env.NODE_ENV === 'production') {
 }else {
   url = process.env.LOCAL_DB;
 }
-
 
 mongoose.set("strictQuery" , false);
 mongoose
@@ -52,8 +50,3 @@ mongoose
   .catch((error) => {
     console.log(`MONGODB ERROR:\n${error}`);
   });
-
-
-module.exports = {
-  app
-};
