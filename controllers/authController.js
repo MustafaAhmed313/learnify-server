@@ -229,11 +229,13 @@ const validateOtp = asyncWrapper(async(req, res, next) => {
   }
 });
 
+// FIXME: Add resetToken and validate 
+
 const resetPassword = asyncWrapper(async(req, res, next) => {
   const {
     email,
     password,
-    confirmPassword
+    confirmPassword,
   } = req.body;
 
   if (!email || !password || !confirmPassword) {

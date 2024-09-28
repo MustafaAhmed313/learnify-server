@@ -1,7 +1,6 @@
 const express = require('express');
 const cors = require('cors');
 const compression = require('compression');
-const morgan = require('morgan');
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 
